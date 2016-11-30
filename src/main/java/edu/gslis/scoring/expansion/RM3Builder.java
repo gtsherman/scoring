@@ -4,6 +4,11 @@ import edu.gslis.queries.GQuery;
 import edu.gslis.textrepresentation.FeatureVector;
 import edu.gslis.utils.Stopper;
 
+/**
+ * Builds an RM3 for a given query.
+ * @author Garrick
+ *
+ */
 public class RM3Builder {
 	
 	private RM1Builder rm1;

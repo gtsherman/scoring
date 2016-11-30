@@ -3,7 +3,7 @@ package edu.gslis.scoring;
 import java.util.Map;
 
 /**
- * Linearly combines other scores, e.g. (1-lam)P(q|D) + lam*Sum_e P(q|e)P(e|D)
+ * Linearly combines other scores
  * @author garrick
  *
  */

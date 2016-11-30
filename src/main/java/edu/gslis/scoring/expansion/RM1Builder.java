@@ -14,6 +14,11 @@ import edu.gslis.searchhits.SearchHits;
 import edu.gslis.textrepresentation.FeatureVector;
 import edu.gslis.utils.Stopper;
 
+/**
+ * Builds an RM1 for a given query.
+ * @author Garrick
+ *
+ */
 public class RM1Builder {
 	
 	public static final int DEFAULT_FEEDBACK_DOCS = 20;

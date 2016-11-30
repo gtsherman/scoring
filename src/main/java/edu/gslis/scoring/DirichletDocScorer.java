@@ -5,7 +5,7 @@ import edu.gslis.searchhits.SearchHit;
 import edu.gslis.textrepresentation.FeatureVector;
 
 /**
- * Standard Dirichlet query likelihood scorer, i.e. P(q|D)
+ * Standard Dirichlet query likelihood scorer
  * 
  * @author garrick
  *

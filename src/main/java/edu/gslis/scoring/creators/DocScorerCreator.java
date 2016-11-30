@@ -26,7 +26,7 @@ public abstract class DocScorerCreator {
 	}
 	
 	/**
-	 * Creates a DocScorer for the given document if one does not exist.
+	 * Creates a DocScorer for the given document with current parameters, if one does not exist.
 	 * @param doc The document that needs to be scored.
 	 */
 	protected abstract void createIfNecessary(SearchHit doc);

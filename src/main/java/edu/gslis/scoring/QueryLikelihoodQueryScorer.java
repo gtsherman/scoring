@@ -5,7 +5,7 @@ import java.util.Iterator;
 import edu.gslis.queries.GQuery;
 
 /**
- * Computes score across all query terms, e.g. Prod_q (1-lam)P(q|D) + lam*Sum_e P(q|e)P(e|D)
+ * Computes score across all query terms.
  * @author garrick
  *
  */
