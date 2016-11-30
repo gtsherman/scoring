@@ -1,4 +1,4 @@
-package edu.gslis.scoring;
+package edu.gslis.scoring.queryscoring;
 
 import edu.gslis.queries.GQuery;
 

@@ -1,8 +1,9 @@
-package edu.gslis.scoring;
+package edu.gslis.scoring.queryscoring;
 
 import java.util.Iterator;
 
 import edu.gslis.queries.GQuery;
+import edu.gslis.scoring.DocScorer;
 
 /**
  * Computes score across all query terms.
