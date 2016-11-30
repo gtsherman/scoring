@@ -3,6 +3,7 @@ package edu.gslis.scoring.expansion;
 import java.util.Iterator;
 
 import edu.gslis.docscoring.support.CollectionStats;
+import edu.gslis.docscoring.support.IndexBackedCollectionStats;
 import edu.gslis.indexes.IndexWrapper;
 import edu.gslis.queries.GQuery;
 import edu.gslis.scoring.DirichletDocScorer;
@@ -42,15 +43,17 @@ public class RM1Builder {
 		this(query, initialHits, DEFAULT_FEEDBACK_DOCS, DEFAULT_FEEDBACK_TERMS, collectionStats);
 	}
 	
-	public RM1Builder(GQuery query, IndexWrapper index, int feedbackDocs, int feedbackTerms, CollectionStats collectionStats) {
+	public RM1Builder(GQuery query, IndexWrapper index, int feedbackDocs, int feedbackTerms) {
 		setFeedbackDocs(feedbackDocs);
 		setFeedbackTerms(feedbackTerms);
 		setQuery(query, index);
-		this.collectionStats = collectionStats;
+
+		this.collectionStats = new IndexBackedCollectionStats();
+		((IndexBackedCollectionStats)collectionStats).setStatSource(index);
 	}
 
-	public RM1Builder(GQuery query, IndexWrapper index, CollectionStats collectionStats) {
-		this(query, index, DEFAULT_FEEDBACK_DOCS, DEFAULT_FEEDBACK_TERMS, collectionStats);
+	public RM1Builder(GQuery query, IndexWrapper index) {
+		this(query, index, DEFAULT_FEEDBACK_DOCS, DEFAULT_FEEDBACK_TERMS);
 	}
 	
 	public void setFeedbackDocs(int feedbackDocs) {
