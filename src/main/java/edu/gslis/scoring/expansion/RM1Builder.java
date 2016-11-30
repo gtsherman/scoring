@@ -6,8 +6,8 @@ import edu.gslis.docscoring.support.CollectionStats;
 import edu.gslis.docscoring.support.IndexBackedCollectionStats;
 import edu.gslis.indexes.IndexWrapper;
 import edu.gslis.queries.GQuery;
-import edu.gslis.scoring.DirichletDocScorer;
 import edu.gslis.scoring.DocScorer;
+import edu.gslis.scoring.creators.DirichletDocScorerCreator;
 import edu.gslis.scoring.queryscoring.QueryLikelihoodQueryScorer;
 import edu.gslis.scoring.queryscoring.QueryScorer;
 import edu.gslis.searchhits.SearchHit;
@@ -81,6 +81,9 @@ public class RM1Builder {
 	public FeatureVector buildRelevanceModel(Stopper stopper) {
 		FeatureVector termScores = new FeatureVector(stopper);
 		
+		DirichletDocScorerCreator docScorerCreator = new DirichletDocScorerCreator(collectionStats);
+		DirichletDocScorerCreator zeroMuDocScorerCreator = new DirichletDocScorerCreator(0, collectionStats);
+		
 		int i = 0;
 		Iterator<SearchHit> hitIt = initialHits.iterator();
 		while (hitIt.hasNext() && i < feedbackDocs) {
@@ -88,8 +91,8 @@ public class RM1Builder {
 			i++;
 			
 			// Prep the scorers
-			QueryScorer queryScorer = new QueryLikelihoodQueryScorer(new DirichletDocScorer(hit, collectionStats));
-			DocScorer rmScorer = new RelevanceModelScorer(new DirichletDocScorer(0, hit, collectionStats),
+			QueryScorer queryScorer = new QueryLikelihoodQueryScorer(docScorerCreator.getDocScorer(hit));
+			DocScorer rmScorer = new RelevanceModelScorer(zeroMuDocScorerCreator.getDocScorer(hit),
 					Math.exp(queryScorer.scoreQuery(query)));
 				
 			// Score each term
