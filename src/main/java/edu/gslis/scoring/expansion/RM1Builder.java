@@ -30,13 +30,16 @@ public class RM1Builder {
 	
 	private GQuery query;
 	private SearchHits initialHits;
-	private CollectionStats collectionStats;
+	
+	private DirichletDocScorerCreator docScorerCreator; 
+	private DirichletDocScorerCreator zeroMuDocScorerCreator; 
 	
 	public RM1Builder(GQuery query, SearchHits initialHits, int feedbackDocs, int feedbackTerms, CollectionStats collectionStats) {
 		setFeedbackDocs(feedbackDocs);
 		setFeedbackTerms(feedbackTerms);
 		setQuery(query, initialHits);
-		this.collectionStats = collectionStats;
+
+		createDocScorerCreators(collectionStats);
 	}
 	
 	public RM1Builder(GQuery query, SearchHits initialHits, CollectionStats collectionStats) {
@@ -48,12 +51,19 @@ public class RM1Builder {
 		setFeedbackTerms(feedbackTerms);
 		setQuery(query, index);
 
-		this.collectionStats = new IndexBackedCollectionStats();
-		((IndexBackedCollectionStats)collectionStats).setStatSource(index);
+		IndexBackedCollectionStats collectionStats = new IndexBackedCollectionStats();
+		collectionStats.setStatSource(index);
+
+		createDocScorerCreators(collectionStats);
 	}
 
 	public RM1Builder(GQuery query, IndexWrapper index) {
 		this(query, index, DEFAULT_FEEDBACK_DOCS, DEFAULT_FEEDBACK_TERMS);
+	}
+	
+	private void createDocScorerCreators(CollectionStats collectionStats) {
+		docScorerCreator = new DirichletDocScorerCreator(collectionStats);
+		zeroMuDocScorerCreator = new DirichletDocScorerCreator(0, collectionStats);
 	}
 	
 	public void setFeedbackDocs(int feedbackDocs) {
@@ -80,9 +90,6 @@ public class RM1Builder {
 
 	public FeatureVector buildRelevanceModel(Stopper stopper) {
 		FeatureVector termScores = new FeatureVector(stopper);
-		
-		DirichletDocScorerCreator docScorerCreator = new DirichletDocScorerCreator(collectionStats);
-		DirichletDocScorerCreator zeroMuDocScorerCreator = new DirichletDocScorerCreator(0, collectionStats);
 		
 		int i = 0;
 		Iterator<SearchHit> hitIt = initialHits.iterator();
