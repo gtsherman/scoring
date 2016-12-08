@@ -42,6 +42,15 @@ public class RM1Builder {
 		createDocScorerCreators(collectionStats);
 	}
 	
+	public RM1Builder(GQuery query, SearchHits initialHits, int feedbackDocs, int feedbackTerms, DirichletDocScorerCreator docScorerCreator) {
+		setFeedbackDocs(feedbackDocs);
+		setFeedbackTerms(feedbackTerms);
+		setQuery(query, initialHits);
+		
+		this.docScorerCreator = docScorerCreator;
+		this.zeroMuDocScorerCreator = new DirichletDocScorerCreator(0, docScorerCreator.getCollectionStats(), false);
+	}
+	
 	public RM1Builder(GQuery query, SearchHits initialHits, CollectionStats collectionStats) {
 		this(query, initialHits, DEFAULT_FEEDBACK_DOCS, DEFAULT_FEEDBACK_TERMS, collectionStats);
 	}
