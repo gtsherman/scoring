@@ -11,14 +11,25 @@ public class DirichletDocScorerCreator extends DocScorerCreator {
 	
 	private CollectionStats collectionStats;
 	private double mu = DEFAULT_MU;
+	private boolean useStoredScorers = true;
 	
 	public DirichletDocScorerCreator(CollectionStats collectionStats) {
 		this.collectionStats = collectionStats;
 	}
 	
+	public DirichletDocScorerCreator(CollectionStats collectionStats, boolean useStoredScorers) {
+		this(collectionStats);
+		useStoredScorers(useStoredScorers);
+	}
+	
 	public DirichletDocScorerCreator(double mu, CollectionStats collectionStats) {
 		this(collectionStats);
 		setMu(mu);
+	}
+	
+	public DirichletDocScorerCreator(double mu, CollectionStats collectionStats, boolean useStoredScorers) {
+		this(mu, collectionStats);
+		useStoredScorers(useStoredScorers);
 	}
 	
 	public CollectionStats getCollectionStats() {
@@ -33,6 +44,10 @@ public class DirichletDocScorerCreator extends DocScorerCreator {
 		this.mu = mu;
 	}
 	
+	public void useStoredScorers(boolean useStoredScorers) {
+		this.useStoredScorers = useStoredScorers;
+	}
+	
 	@Override
 	protected void createIfNecessary(SearchHit doc) {
 		String docKey = docKey(doc);
@@ -41,7 +56,11 @@ public class DirichletDocScorerCreator extends DocScorerCreator {
 			if (mu != DEFAULT_MU) {
 				docScorer.setMu(mu);
 			}
-			storedScorers.put(docKey, new StoredDocScorer(docScorer));
+			if (useStoredScorers) {
+				storedScorers.put(docKey, new StoredDocScorer(docScorer));
+			} else {
+				storedScorers.put(docKey, docScorer);
+			}
 		}
 	}
 	

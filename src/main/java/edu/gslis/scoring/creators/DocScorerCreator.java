@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.gslis.scoring.DocScorer;
-import edu.gslis.scoring.StoredDocScorer;
 import edu.gslis.searchhits.SearchHit;
 
 /**
@@ -18,7 +17,7 @@ import edu.gslis.searchhits.SearchHit;
  */
 public abstract class DocScorerCreator {
 	
-	protected Map<String, StoredDocScorer> storedScorers = new HashMap<String, StoredDocScorer>();
+	protected Map<String, DocScorer> storedScorers = new HashMap<String, DocScorer>();
 	
 	public DocScorer getDocScorer(SearchHit doc) {
 		createIfNecessary(doc);
