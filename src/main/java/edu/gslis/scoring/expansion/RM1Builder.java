@@ -63,7 +63,7 @@ public class RM1Builder {
 	
 	private void createDocScorerCreators(CollectionStats collectionStats) {
 		docScorerCreator = new DirichletDocScorerCreator(collectionStats);
-		zeroMuDocScorerCreator = new DirichletDocScorerCreator(0, collectionStats);
+		zeroMuDocScorerCreator = new DirichletDocScorerCreator(0, collectionStats, false);
 	}
 	
 	public void setFeedbackDocs(int feedbackDocs) {
