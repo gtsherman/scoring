@@ -1,5 +1,7 @@
 package edu.gslis.scoring;
 
+import edu.gslis.searchhits.SearchHit;
+
 public abstract class DocScorerWithDocumentPrior implements DocScorer {
 	
 	private DocScorer nonPriorScorer;
@@ -13,8 +15,9 @@ public abstract class DocScorerWithDocumentPrior implements DocScorer {
 	
 	public abstract double getPrior();
 
-	public double scoreTerm(String term) {
-		return getPrior() * nonPriorScorer.scoreTerm(term);
+	@Override
+	public double scoreTerm(String term, SearchHit document) {
+		return getPrior() * nonPriorScorer.scoreTerm(term, document);
 	}
 
 }

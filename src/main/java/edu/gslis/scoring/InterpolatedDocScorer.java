@@ -2,9 +2,11 @@ package edu.gslis.scoring;
 
 import java.util.Map;
 
+import edu.gslis.searchhits.SearchHit;
+
 /**
  * Linearly combines other scores
- * @author garrick
+ * @author Garrick
  *
  */
 public class InterpolatedDocScorer implements DocScorer {
@@ -18,12 +20,13 @@ public class InterpolatedDocScorer implements DocScorer {
 		this.scorers = scorers;
 	}
 	
-	public double scoreTerm(String term) {
+	@Override
+	public double scoreTerm(String term, SearchHit document) {
 		double score = 0.0;
 
 		for (DocScorer scorer : scorers.keySet()) {
 			double mixingWeight = scorers.get(scorer);
-			score += mixingWeight * scorer.scoreTerm(term);
+			score += mixingWeight * scorer.scoreTerm(term, document);
 		}
 
 		return score;

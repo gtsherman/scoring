@@ -4,10 +4,11 @@ import java.util.Iterator;
 
 import edu.gslis.queries.GQuery;
 import edu.gslis.scoring.DocScorer;
+import edu.gslis.searchhits.SearchHit;
 
 /**
  * Computes score across all query terms.
- * @author garrick
+ * @author Garrick
  *
  */
 public class QueryLikelihoodQueryScorer implements QueryScorer {
@@ -18,13 +19,14 @@ public class QueryLikelihoodQueryScorer implements QueryScorer {
 		this.termScorer = termScorer;
 	}
 	
-	public double scoreQuery(GQuery query) {
+	@Override
+	public double scoreQuery(GQuery query, SearchHit document) {
 		double loglikelihood = 0.0;
 
 		Iterator<String> termIt = query.getFeatureVector().iterator();
 		while (termIt.hasNext()) {
 			String term = termIt.next();
-			double termProb = termScorer.scoreTerm(term);
+			double termProb = termScorer.scoreTerm(term, document);
 			if (termProb == 0) {
 				continue;
 			}

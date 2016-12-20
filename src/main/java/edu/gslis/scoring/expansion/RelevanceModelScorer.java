@@ -1,10 +1,11 @@
 package edu.gslis.scoring.expansion;
 
 import edu.gslis.scoring.DocScorer;
+import edu.gslis.searchhits.SearchHit;
 
 /**
  * Computes the relevance model score for a given term.
- * @author garrick
+ * @author Garrick
  *
  */
 public class RelevanceModelScorer implements DocScorer{
@@ -21,8 +22,9 @@ public class RelevanceModelScorer implements DocScorer{
 		this.queryWeight = queryWeight;
 	}
 
-	public double scoreTerm(String term) {
-		return termScorer.scoreTerm(term) * queryWeight;
+	@Override
+	public double scoreTerm(String term, SearchHit document) {
+		return termScorer.scoreTerm(term, document) * queryWeight;
 	}
 
 }
