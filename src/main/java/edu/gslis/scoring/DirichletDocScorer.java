@@ -10,7 +10,7 @@ import edu.gslis.textrepresentation.FeatureVector;
  * @author Garrick
  *
  */
-public class DirichletDocScorer extends CachedDocScorer {
+public class DirichletDocScorer implements DocScorer {
 	
 	protected double mu = 2500.0;
 	protected double epsilon = 1.0;
@@ -40,10 +40,7 @@ public class DirichletDocScorer extends CachedDocScorer {
 	}
 	
 	@Override
-	protected double scoreTerm(DocumentTermKey key) {
-		String term = key.getTerm();
-		SearchHit doc = key.getDocument();
-		
+	public double scoreTerm(String term, SearchHit doc) {
 		FeatureVector docVector = doc.getFeatureVector();
 		double wordCount = docVector.getFeatureWeight(term);
 		double docLength = docVector.getLength();

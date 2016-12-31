@@ -8,19 +8,31 @@ import com.google.common.cache.LoadingCache;
 
 import edu.gslis.searchhits.SearchHit;
 
-public abstract class CachedDocScorer implements DocScorer {
+public class CachedDocScorer implements DocScorer {
+
+	private DocScorer scorer;
 
 	private LoadingCache<DocumentTermKey, Double> termScores = CacheBuilder.newBuilder()
 			.softValues()
 			.build(
 					new CacheLoader<DocumentTermKey, Double>() {
 						public Double load(DocumentTermKey key) throws Exception {
-							return scoreTerm(key);
+							String term = key.getTerm();
+							SearchHit doc = key.getDocument();
+							return scorer.scoreTerm(term, doc);
 						}
 					});	
 	
+	public CachedDocScorer(DocScorer scorer) {
+		this.scorer = scorer;
+	}
+	
 	public LoadingCache<DocumentTermKey, Double> getCache() {
 		return termScores;
+	}
+	
+	public DocScorer getDocScorer() {
+		return scorer;
 	}
 
 	@Override
@@ -34,12 +46,10 @@ public abstract class CachedDocScorer implements DocScorer {
 			System.err.println(e.getStackTrace());
 		}
 		
-		// Default to zero, if we have an issue
+		// Default to zero if we have an issue
 		return 0.0;
 	}
 	
-	protected abstract double scoreTerm(DocumentTermKey key);
-
 	protected class DocumentTermKey {
 		
 		private String term;
