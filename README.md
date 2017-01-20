@@ -24,7 +24,7 @@ Query scoring is accomplished using `QueryScorer` implementations, which are exp
 
 ### Efficiency
 
-Some applications require computing the same or similar scores repeatedly. For example, in cross validation, the same documents may be scored for the same query with the same or different parameters in all but one fold. The library therefore includes the `CachedDocScorer` class, which sits in between the actual `DocScorer` implementation and the client, holding a cache of any previously scored query/term pairs.
+Some applications require computing the same or similar scores repeatedly. For example, in cross validation, the same documents may be scored for the same query with the same or different parameters in all but one fold. The library therefore includes the `CachedDocScorer` class, which sits in between the actual `DocScorer` implementation and the client, holding a cache of any previously scored document/term pairs.
 
 ## Installation
 
