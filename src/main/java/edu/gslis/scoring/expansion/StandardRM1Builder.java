@@ -3,14 +3,15 @@ package edu.gslis.scoring.expansion;
 import java.util.Iterator;
 
 import edu.gslis.docscoring.support.CollectionStats;
+import edu.gslis.queries.GQuery;
 import edu.gslis.scoring.DirichletDocScorer;
 import edu.gslis.scoring.DocScorer;
 import edu.gslis.scoring.queryscoring.QueryLikelihoodQueryScorer;
 import edu.gslis.scoring.queryscoring.QueryScorer;
 import edu.gslis.searchhits.SearchHit;
+import edu.gslis.searchhits.SearchHits;
 import edu.gslis.textrepresentation.FeatureVector;
 import edu.gslis.utils.Stopper;
-import edu.gslis.utils.retrieval.QueryResults;
 
 /**
  * Builds an RM1 for a given query.
@@ -52,16 +53,16 @@ public class StandardRM1Builder implements RM1Builder {
 	}
 	
 	@Override
-	public FeatureVector buildRelevanceModel(QueryResults queryResults) {
-		return buildRelevanceModel(queryResults, null);
+	public FeatureVector buildRelevanceModel(GQuery query, SearchHits initialResults) {
+		return buildRelevanceModel(query, initialResults, null);
 	}
 
 	@Override
-	public FeatureVector buildRelevanceModel(QueryResults queryResults, Stopper stopper) {
+	public FeatureVector buildRelevanceModel(GQuery query, SearchHits initialResults, Stopper stopper) {
 		FeatureVector termScores = new FeatureVector(stopper);
 		
 		int i = 0;
-		Iterator<SearchHit> hitIt = queryResults.getResults().iterator();
+		Iterator<SearchHit> hitIt = initialResults.iterator();
 		while (hitIt.hasNext() && i < feedbackDocs) {
 			SearchHit hit = hitIt.next();
 			i++;
@@ -69,14 +70,14 @@ public class StandardRM1Builder implements RM1Builder {
 			// Prep the scorers
 			QueryScorer queryScorer = new QueryLikelihoodQueryScorer(docScorer);
 			DocScorer rmScorer = new RelevanceModelScorer(zeroMuDocScorer,
-					Math.exp(queryScorer.scoreQuery(queryResults.getQuery(), hit)));
+					Math.exp(queryScorer.scoreQuery(query, hit)));
 				
 			// Score each term
 			for (String term : hit.getFeatureVector().getFeatures()) {
 				if (stopper != null && stopper.isStopWord(term)) {
 					continue;
 				}
-				termScores.addTerm(term, rmScorer.scoreTerm(term, hit) / queryResults.getResults().size());
+				termScores.addTerm(term, rmScorer.scoreTerm(term, hit) / initialResults.size());
 			}
 		}
 		termScores.clip(feedbackTerms);

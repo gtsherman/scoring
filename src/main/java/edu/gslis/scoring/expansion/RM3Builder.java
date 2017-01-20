@@ -1,8 +1,9 @@
 package edu.gslis.scoring.expansion;
 
+import edu.gslis.queries.GQuery;
+import edu.gslis.searchhits.SearchHits;
 import edu.gslis.textrepresentation.FeatureVector;
 import edu.gslis.utils.Stopper;
-import edu.gslis.utils.retrieval.QueryResults;
 
 /**
  * Builds an RM3 for a given query.
@@ -11,22 +12,22 @@ import edu.gslis.utils.retrieval.QueryResults;
  */
 public class RM3Builder {
 	
-	public FeatureVector buildRelevanceModel(QueryResults queryResults,
+	public FeatureVector buildRelevanceModel(GQuery query, SearchHits initialResults,
 			RM1Builder rm1,
 			double originalQueryWeight) {
-		return buildRelevanceModel(queryResults, rm1, originalQueryWeight, null);
+		return buildRelevanceModel(query, initialResults, rm1, originalQueryWeight, null);
 	}
 
-	public FeatureVector buildRelevanceModel(QueryResults queryResults,
+	public FeatureVector buildRelevanceModel(GQuery query, SearchHits initialResults,
 			RM1Builder rm1,
 			double originalQueryWeight,
 			Stopper stopper) {
-		queryResults.getQuery().getFeatureVector().normalize(); // very important
+		query.getFeatureVector().normalize(); // very important
 
-		FeatureVector rmVector = rm1.buildRelevanceModel(queryResults, stopper);
+		FeatureVector rmVector = rm1.buildRelevanceModel(query, initialResults, stopper);
 		rmVector.normalize(); // very important
 
-		return FeatureVector.interpolate(queryResults.getQuery().getFeatureVector(),
+		return FeatureVector.interpolate(query.getFeatureVector(),
 				rmVector, originalQueryWeight);
 	}
 
