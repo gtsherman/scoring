@@ -13,11 +13,11 @@ public abstract class DocScorerWithDocumentPrior implements DocScorer {
 		this.nonPriorScorer = nonPriorScorer;
 	}
 	
-	public abstract double getPrior();
+	public abstract double getPrior(SearchHit document);
 
 	@Override
 	public double scoreTerm(String term, SearchHit document) {
-		return getPrior() * nonPriorScorer.scoreTerm(term, document);
+		return getPrior(document) * nonPriorScorer.scoreTerm(term, document);
 	}
 
 }
